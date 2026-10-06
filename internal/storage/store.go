@@ -80,6 +80,9 @@ func normalizeSnapshot(value domain.Snapshot) (domain.Snapshot, error) {
 	}
 	rebuilt := domain.EmptyOccupancy()
 	for _, run := range value.Runs {
+		if run.State == domain.RunCompleted || run.State == domain.RunAborted {
+			continue
+		}
 		rebuilt.FormulaOpen[run.FormulaID]++
 		if run.VesselID != nil {
 			rebuilt.VesselOpen[*run.VesselID]++

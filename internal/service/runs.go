@@ -162,6 +162,7 @@ func (s *Service) AbortRun(
 		if err := run.Abort(s.clock.Now()); err != nil {
 			return err
 		}
+		snapshot.Occupancy.ReleaseFormula(run.FormulaID)
 		if run.VesselID != nil {
 			vessel, ok := snapshot.Vessels[*run.VesselID]
 			if !ok {

@@ -56,6 +56,23 @@ func (o *Occupancy) ReleaseVessel(vesselID string) {
 	o.Generation++
 }
 
+func (o Occupancy) Clone() Occupancy {
+	cloned := Occupancy{Generation: o.Generation}
+	if o.FormulaOpen != nil {
+		cloned.FormulaOpen = make(map[string]int64, len(o.FormulaOpen))
+		for key, value := range o.FormulaOpen {
+			cloned.FormulaOpen[key] = value
+		}
+	}
+	if o.VesselOpen != nil {
+		cloned.VesselOpen = make(map[string]int64, len(o.VesselOpen))
+		for key, value := range o.VesselOpen {
+			cloned.VesselOpen[key] = value
+		}
+	}
+	return cloned
+}
+
 type Snapshot struct {
 	Revision    int64                      `json:"revision"`
 	UpdatedAt   time.Time                  `json:"updated_at"`
@@ -85,7 +102,7 @@ func (s Snapshot) Clone() Snapshot {
 	cloned := EmptySnapshot()
 	cloned.Revision = s.Revision
 	cloned.UpdatedAt = s.UpdatedAt
-	cloned.Occupancy = s.Occupancy
+	cloned.Occupancy = s.Occupancy.Clone()
 	for key, value := range s.Formulas {
 		cloned.Formulas[key] = value.Clone()
 	}

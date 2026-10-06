@@ -78,8 +78,14 @@ func normalizeSnapshot(value domain.Snapshot) (domain.Snapshot, error) {
 	if value.RunIndex == nil {
 		value.RunIndex = map[string]string{}
 	}
+	// Rebuild occupancy from the actual batch states: completed and aborted
+	// runs no longer hold their formula or vessel, even though a completed run
+	// keeps its vessel association until cleaning is finished.
 	rebuilt := domain.EmptyOccupancy()
 	for _, run := range value.Runs {
+		if !run.IsOpen() {
+			continue
+		}
 		rebuilt.FormulaOpen[run.FormulaID]++
 		if run.VesselID != nil {
 			rebuilt.VesselOpen[*run.VesselID]++

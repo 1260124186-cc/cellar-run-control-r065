@@ -167,3 +167,9 @@ func (r *FermentationRun) Abort(now time.Time) error {
 func (r FermentationRun) HadStarted() bool {
 	return r.StartedAt != nil
 }
+
+// IsOpen reports whether the run still holds its formula and vessel. Only
+// completed and aborted runs release them.
+func (r FermentationRun) IsOpen() bool {
+	return r.State != RunCompleted && r.State != RunAborted
+}

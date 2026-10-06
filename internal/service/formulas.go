@@ -109,7 +109,7 @@ func (s *Service) RetireFormula(id string, input VersionInput) (domain.Formula, 
 		if err := s.checkExpected(formula.Version, input.ExpectedVersion); err != nil {
 			return err
 		}
-		if input.ExpectedVersion != nil && snapshot.Occupancy.FormulaInUse(id) {
+		if snapshot.Occupancy.FormulaInUse(id) {
 			return domain.NewError(domain.CodeFormulaInUse,
 				"formula is attached to a run that is still open")
 		}

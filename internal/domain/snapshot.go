@@ -18,6 +18,18 @@ func EmptyOccupancy() Occupancy {
 	}
 }
 
+func (o Occupancy) Clone() Occupancy {
+	cloned := EmptyOccupancy()
+	for key, value := range o.FormulaOpen {
+		cloned.FormulaOpen[key] = value
+	}
+	for key, value := range o.VesselOpen {
+		cloned.VesselOpen[key] = value
+	}
+	cloned.Generation = o.Generation
+	return cloned
+}
+
 func (o Occupancy) FormulaInUse(formulaID string) bool {
 	return o.FormulaOpen[formulaID] > 0
 }
@@ -85,7 +97,7 @@ func (s Snapshot) Clone() Snapshot {
 	cloned := EmptySnapshot()
 	cloned.Revision = s.Revision
 	cloned.UpdatedAt = s.UpdatedAt
-	cloned.Occupancy = s.Occupancy
+	cloned.Occupancy = s.Occupancy.Clone()
 	for key, value := range s.Formulas {
 		cloned.Formulas[key] = value.Clone()
 	}
